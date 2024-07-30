@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CINE UTC</title>
+    <!--Importanado jquery-->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!--Importanado bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <!--Importanado DataTables-->
+    <link rel="stylesheet" href="//cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css">
+    <!--Importanado Java Script-->
+    <script src="//cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <!--Importanado SweetAlert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!--Importanado Jquery Validation-->
+    <script src="{% static 'librerias/jquery-validation/dist/jquery.validate.min.js' %}"></script>
+    <!--Importando font ewosome-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.3.0/css/all.min.css" integrity="sha512-UJqci0ZyYcQ0AOJkcIkUCxLS2L6eNcOr7ZiypuInvEhO9uqIDi349MEFrqBzoy1QlfcjfURHl+WTMjEdWcv67A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--Importando FileInput.js -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/css/fileinput.min.css">
+    <script  src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/fileinput.min.js"></script>
+  </head>
+  
+<body>
+  <!--Menú-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/home/">CINE UTC</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/home/">Inicio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'listadoGeneros' %}">Géneros</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/listadoPeliculas/">Películas</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'listadoDirectores' %}">Directores</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/listadoPaises/">Países</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/gmail/">Enviar Correo</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'listadoCines' %}">Gestión Cines</a>
+              </li>
+          </div>
+        </div>
+      </nav>
+    <!-- Estructura de janga 2jango 2-->
+   <!-- Estas dos lineas nos permite añadir el contenido entre el menu y el pie --> 
+    {% block body %} 
+    <!-- Body o cuerpo -->
+    {% endblock %}
+
+<!--Pie de página-->
+</footer>
+
+
+<footer class="footer mt-5 py-3 bg-info text-white">
+  <div class="container">
+      <div class="row">
+          <div class="col-md-6">
+              <p class="text-center mb-0"><b>Desarrollado por:</b> © Adrian Troya</p>
+          </div>
+          <div class="col-md-6">
+            <p class="text-center mb-0"><b>© 2024 Universidad Técnica de Cotopaxi</b></p>
+                  <br>
+  </div>
+  </div>
+</footer>
+{% if messages %}
+  {% for mensaje in messages %}
+    {% if mensaje.tags == 'success' %}
+        <script>
+          Swal.fire({
+            title: "CONFIRMACIÓN",
+            text: "{{mensaje}}", //esteb mensaje es reutilizable
+            icon: "sucess"
+          });
+        </script>
+      {% endif %}
+  {% endfor %}
+{% endif %}
+    
+</body>
+  <style>
+    /*Letras de color rojo*/
+      label.error{
+        color: red;
+      }
+      /*Borde de color rojo*/
+      .form-control.error{
+        border: 1px solid red;
+      }
+  </style>
+</html>

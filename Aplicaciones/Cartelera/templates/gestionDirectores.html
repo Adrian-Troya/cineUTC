@@ -1,0 +1,103 @@
+{% extends "./plantilla.html" %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+    <h1 class="text-center">Gestión de Directores con Peticiones Asíncronas</h1>
+    <div class="row"> 
+        <div class="col-md-12 text-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fas fa-plus"></i>
+                <b>Agregar Director</b>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Director</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="#" id="frm_nuevo_director">
+                    {% csrf_token %}
+                    <label for="nombre"><b>Nombre:</b></label>
+                    <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del director">
+                    <br>
+                    <label for="email"><b>Email:</b></label>
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Ingrese el email del director">
+                    <br>
+                    <label for="estado"><b>Estado:</b></label>
+                    <input type="checkbox" name="estado" class="form-control" id="estado">
+                    <br>
+                    <label for="gmail"><b>Gmail:</b></label>
+                    <input type="email" name="gmail" class="form-control" id="gmail" placeholder="Ingrese el Gmail del director">
+                    <br>
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>&nbsp;Guardar
+                        </button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                            <i class="fas fa-times"></i>&nbsp;Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br><br><br><br>
+
+<script>
+    document.querySelector("#frm_nuevo_director").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let formData = new FormData(this);
+        formData.append('estado', document.querySelector('#estado').checked);
+
+        fetch("{% url 'guardarDirector' %}", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.estado === true) {
+                Swal.fire({
+                    title: 'Confirmación',
+                    text: data.mensaje,
+                    icon: 'success'
+                });
+                $("#exampleModal").modal('hide');
+                this.reset();
+                cargarDirectores(); // Recargar la lista de directores
+            } else {
+                Swal.fire({
+                    title: 'ERROR',
+                    text: data.mensaje,
+                    icon: 'error'
+                });
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            Swal.fire({
+                title: 'ERROR',
+                text: "Ocurrió un error al procesar la solicitud",
+                icon: 'error'
+            });
+        });
+    });
+
+    function cargarDirectores() {
+        $("#contenedor-directores").load('{% url "listadoDirectores" %}');
+    }
+</script>
+
+{% endblock %}

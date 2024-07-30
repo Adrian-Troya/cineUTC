@@ -1,0 +1,61 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<h1>EDITAR DIRECTOR</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <form action="{% url 'procesoActualizarDirector' directorEditar.id %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ directorEditar.id }}">
+
+                <div class="form-group">
+                    <label for="dni"><b>Cédula: </b></label>
+                    <input type="text" name="dni" class="form-control" 
+                    value="{{ directorEditar.dni }}"
+                    id="dni" placeholder="Ingrese la cédula del Director" required>
+
+                    <label for="apellido"><b>Apellido:</b></label>
+                    <input type="text" name="apellido" class="form-control"
+                    value="{{ directorEditar.apellido }}"
+                    id="apellido" placeholder="Ingrese el apellido del director" required>
+
+                    <label for="nombre"><b>Nombre:</b></label>
+                    <input type="text" name="nombre" class="form-control"
+                    value="{{ directorEditar.nombre }}"
+                    id="nombre" placeholder="Ingrese el nombre del director" required>
+
+                    <label for="gmail"><b>Email:</b></label>
+                    <input type="email" name="gmail" class="form-control"
+                    value="{{ directorEditar.gmail }}"
+                    id="gmail" placeholder="Ingrese el email del director" required>
+
+                    <label for="estado"><b>Estado:</b></label>
+                    <select name="estado" class="form-control" id="estado" required>
+                        <option value="">Seleccione el estado del Director</option>
+                        <option value="True" {% if directorEditar.estado %}selected{% endif %}>Activo</option>
+                        <option value="False" {% if not directorEditar.estado %}selected{% endif %}>Inactivo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="portada"><b>Fotografía actual:</b></label>
+                    <br>
+                    {% if directorEditar.portada %}
+                      <img src="{{ directorEditar.portada.url }}" alt="Fotografía del director" height="200px"> <br><br>
+                    {% else %}
+                        <p>No hay fotografía disponible</p>  
+                    {% endif %}
+                    <br>
+                    <label for="portada"><b>Seleccionar nueva fotografía:</b></label>
+                    <input type="file" name="portada" class="form-control" accept="image/*">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-warning">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listadoDirectores' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}

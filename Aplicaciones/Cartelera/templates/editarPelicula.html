@@ -1,0 +1,97 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<h1>EDITAR DATOS DE LA PELÍCULA</h1>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="frm_editar_pelicula" action="{% url 'procesoActualizarPelicula' peliculaEditar.id %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="titulo"><b>Título:</b></label>
+                    <input type="text" name="titulo" class="form-control" id="titulo" value="{{ peliculaEditar.titulo }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="duracion"><b>Duración:</b></label>
+                    <input type="text" name="duracion" class="form-control" id="duracion" value="{{ peliculaEditar.duracion }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="sinopsis"><b>Sinópsis:</b></label>
+                    <textarea name="sinopsis" id="sinopsis" class="form-control" rows="3" required>{{ peliculaEditar.sinopsis }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="genero"><b>Género:</b></label>
+                    <select name="genero" id="genero" class="form-control">
+                        {% for genero in generos %}
+                        <option value="{{ genero.id }}" {% if genero.id == peliculaEditar.genero.id %}selected{% endif %}>{{ genero.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="director"><b>Director:</b></label>
+                    <select name="director" id="director" class="form-control">
+                        {% for director in directores %}
+                        <option value="{{ director.id }}" {% if director.id == peliculaEditar.director.id %}selected{% endif %}>{{ director.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="{% url 'listadoPeliculas' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.19.5/jquery.validate.min.js"></script>
+<script>
+    $("#frm_editar_pelicula").validate({
+        rules: {
+            titulo: {
+                required: true,
+                minlength: 3,
+                maxlength: 250
+            },
+            duracion: {
+                required: true,
+                minlength: 3,
+                maxlength: 10
+            },
+            sinopsis: {
+                required: true,
+                minlength: 10
+            },
+            genero: {
+                required: true
+            },
+            director: {
+                required: true
+            }
+        },
+        messages: {
+            titulo: {
+                required: "Por favor ingrese el título",
+                minlength: "El título debe tener al menos 3 caracteres",
+                maxlength: "El título no debe exceder los 250 caracteres"
+            },
+            duracion: {
+                required: "Por favor ingrese la duración",
+                minlength: "La duración debe tener al menos 3 caracteres",
+                maxlength: "La duración no debe exceder los 10 caracteres"
+            },
+            sinopsis: {
+                required: "Por favor ingrese la sinópsis",
+                minlength: "La sinópsis debe tener al menos 10 caracteres"
+            },
+            genero: {
+                required: "Por favor seleccione un género"
+            },
+            director: {
+                required: "Por favor seleccione un director"
+            }
+        }
+    });
+</script>
+{% endblock %}

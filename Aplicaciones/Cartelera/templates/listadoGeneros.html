@@ -1,0 +1,73 @@
+{% extends "./plantilla.html" %}
+{% block body %}
+<br>
+<div class="card">
+    <div class="card-title text-center">
+        <h3><b>Listado de Géneros</b></h3>
+    </div>
+    <div class="text-end">
+        <a href="{% url 'nuevoGenero' %}" class="btn btn-success">Agregar Género</a>
+    </div>
+    <br>
+    <table class="table table-bordered table-striped table-hover" id="tbl-generos">
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>NOMBRE</td>
+                <td>DESCRIPCIÓN</td>
+                <td>ESTADO</td>
+                <td>FOTO</td>
+                <td>ACCIONES</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for generoTemporal in generos %}
+            <tr>
+                <td>{{ generoTemporal.id }}</td>
+                <td>{{ generoTemporal.nombre }}</td>
+                <td>{{ generoTemporal.descripcion }}</td>
+                <td>
+                    {% if generoTemporal.estado %}
+                    <span class="badge bg-success">Activo</span>
+                    {% else %}
+                    <span class="badge bg-danger">Inactivo</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if generoTemporal.foto %}
+                    <a href="{{ generoTemporal.foto.url }}" target="_blank">
+                        <img src="{{ generoTemporal.foto.url }}" alt=""
+                        height="100px" width="100px">
+                    </a><br>
+                    <a download href="{{ generoTemporal.foto.url }}">
+                        Descargar
+                    </a>
+                    {% else %}
+                    <span>No hay foto disponible</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'editarGenero' generoTemporal.id %}" class="btn btn-warning">Editar</a>
+                    <a href="{% url 'eliminarGeneros' generoTemporal.id %}" onclick="return confirm('¿Estás seguro?');" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        let table = new DataTable('#tbl-generos');
+    </script>
+
+    <style>
+        .dt-input {
+            border: 3px solid red !important;
+            border-radius: 20px !important;
+        }
+        .dt-search label {
+            color: green !important;
+        }
+    </style>
+
+</div>
+{% endblock %}

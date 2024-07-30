@@ -1,0 +1,62 @@
+<!--Herencias de jango 2-->
+{% extends "./plantilla.html" %}
+{% load static %} <!-- LLamamos a static -->
+{% block body %}
+
+
+<img src="{% static 'img/cine.jpg' %}" alt="No se encuentra"> <!-- llamamos a la imagen desde static/img -->
+<br><br>
+<div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="{% static 'img/cine1.jpg' %}" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'img/cine2.webp' %}" class="d-block w-100" alt="...">
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'img/cine3.jpg' %}" class="d-block w-100" alt="...">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <footer class="footer mt-5 py-3 bg-success text-white">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="text-center mb-0"><b>MISIÓN</b> <br>
+                    Brindar experiencias cinematográficas excepcionales
+                    que cautiven y emocionen a nuestra audiencia. Nos 
+                    comprometemos a ofrecer la más alta calidad en proyección,
+                    sonido y servicio al cliente, creando un ambiente acogedor y 
+                    emocionante donde los amantes del cine puedan disfrutar de las
+                    últimas películas en un entorno cómodo y seguro</p>
+            </div>
+            <div class="col-md-6">
+              <p class="text-center mb-0"><b>VISIÓN</b> <br>
+                    Ser el destino preferido para los cinéfilos de nuestra comunidad, 
+                    reconocidos por nuestra dedicación a la excelencia en la presentación 
+                    de películas, la comodidad de nuestras instalaciones y la atención al
+                    cliente. Nos esforzamos por ser líderes en la industria del entretenimiento, 
+                    innovando constantemente para mejorar la experiencia del cine y mantenernos 
+                    a la vanguardia de las tendencias tecnológicas y culturales</p>
+                    <br>
+    </div>
+    </div>
+  </div>
+  </footer>
+
+{% endblock %}
