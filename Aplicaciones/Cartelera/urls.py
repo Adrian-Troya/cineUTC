@@ -32,7 +32,7 @@ urlpatterns = [
 
     #-----------------------------------------GESTION CINES--------------------------------------------------
     path('listadoCines/', views.ListadoCines, name='listadoCines'),
-    path('gestionCines/',views.gestionCines, name='gestionCines'),
+    path('gestionCines/', views.gestionCines, name='gestionCines'),
     path('guardarCine/', views.guardarCine, name='guardarCine'),
     #-----------------------------------------CORREO ELECTRONICO--------------------------------------------------
 ]

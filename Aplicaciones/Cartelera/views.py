@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Genero, Pelicula, Director, Pais, Cine
 from django.contrib import messages
-#IMPORTACIONES PARA CORREO ELECTRONICO
-from django.core.mail import EmailMessage
-#from .forms import FormularioContacto
 from django.http import HttpResponse, JsonResponse
 
 #importaciones prueba para cine
