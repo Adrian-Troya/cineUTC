@@ -34,6 +34,5 @@ urlpatterns = [
     path('listadoCines/', views.ListadoCines, name='listadoCines'),
     path('gestionCines/',views.gestionCines, name='gestionCines'),
     path('guardarCine/', views.guardarCine, name='guardarCine'),
-    #-----------------------------------------CORREO ELECTRONICO--------------------------------------------------
-    path('correo/', views.correo, name='correo')
+
 ]
