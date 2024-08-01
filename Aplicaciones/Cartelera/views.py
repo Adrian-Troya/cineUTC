@@ -238,28 +238,3 @@ def guardarCine(request):
         })
 #--------------------------------------CORREO ELECTRONICO---------------
 
-def correo(request):
-
-    formulario_contacto=FormularioContacto()
-
-    if request.method == "POST":
-        formulario_contacto=FormularioContacto(data=request.POST)
-        if formulario_contacto.is_valid():
-            nombre = request.POST.get('nombre')
-            email = request.POST.get('email')
-            contenido = request.POST.get('contenido')
-
-            email=EmailMessage("Mensaje de app Django",
-            "El usuario con nombre {} con la dirección {} escribe lo siguiente:\n\n {}".format(nombre, email, contenido),
-            '',
-            ["javierguala07@gmail.com"],
-            reply_to=[email])
-            
-            try:
-                email.send()
-
-                return redirect("/correo/?valido")
-            except:
-                return redirect("/correo/?novalido")
-           
-    return render(request, "correo.html", {'miFormulario':formulario_contacto})
