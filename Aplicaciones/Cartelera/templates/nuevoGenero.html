@@ -1,75 +1,64 @@
 {% extends "./plantilla.html" %}
 {% block body %}
-<h1 style="text-align: center;">Ingrese datos para el GÉNERO</h1>
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-4">
-            <form action="{% url 'guardarGenero' %}" enctype="multipart/form-data" method="post">
+<div class="container-fluid" style="padding-left: 400px; padding-right: 400px;">
+    <div class="row">
+        <div class="col-md-12">
+            <form action="{% url 'guardarGenero' %}" enctype="multipart/form-data" id="frm_nuevo_genero" method="post">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label for="nombre"><b>Nombre:</b></label>
-                    <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del género" required>
-                </div>
-                <div class="form-group">
-                    <label for="descripcion"><b>Descripción:</b></label>
-                    <textarea name="descripcion" id="descripcion" class="form-control" rows="3" placeholder="Ingrese la descripción" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="estado"><b>Estado:</b></label>
-                    <select name="estado" id="estado" class="form-control" required>
-                        <option value="">Seleccione un estado</option>
-                        <option value="True">Activo</option>
-                        <option value="False">Inactivo</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="foto"><b>Fotografía:</b></label>
-                    <input type="file" name="foto" id="foto" accept="image/*" class="form-control">
-                </div>
+                <label for=""><b>Nombre:</b></label>
+                <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del genero">
                 <br>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <label for=""><b>Descripción:</b></label>
+                <textarea name="descripcion" class="form-control" id="descripcion" rows="3" placeholder="Ingrese la descripción"></textarea>
+                <br>
+                <b for=""><br>Fotografía:</b></label>
+                <input type="file" name="foto" id="foto" accept="image/*"s
+                required class="form-control">
+
+                <br><br>
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'listadoGeneros' %}" class="btn btn-secondary">Cancelar</a>
+                <a href="{% url 'listadoGeneros' %}">Cancelar</a>
+
             </form>
+
         </div>
     </div>
 </div>
-
+<br><br><br><br><br>
+<!--Para que funcione java scrip se utiliza script, maneras de acceder al DOM-->
 <script>
     $("#frm_nuevo_genero").validate({
-        rules: {
-            nombre: {
-                required: true,
-                minlength: 3
+        rules:{
+            nombre:{
+                required:true,
+                minlength: 3,
+                maxlength: 10
             },
-            descripcion: {
-                required: true
+            descripcion:{
+                required:true
             },
-            estado: {
-                required: true
-            },
-            foto: {
-                required: true
+            foto:{
+                required:true
             }
         },
-        messages: {
-            nombre: {
-                required: "Por favor ingrese el nombre del género",
-                minlength: "El nombre debe tener al menos 3 caracteres"
+        messages:{
+            nombre:{
+                required:"Por favor ingrese el nombre",
+                minlength:"El nombre debe tener al menos 3 letras minimo",
+                maxlength:"Máximo 10 caracteres"
             },
-            descripcion: {
-                required: "Por favor ingrese una descripción"
+            descripcion:{
+                required:"La descripción es obligatoria"
             },
-            estado: {
-                required: "Por favor seleccione un estado"
-            },
-            foto: {
-                required: "Por favor seleccione una fotografía"
+            foto:{
+                required:"Por favor seleccione la foto"
             }
         }
     });
 </script>
-
 <script>
     $(document).ready(function() {
         $("#foto").fileinput({                       

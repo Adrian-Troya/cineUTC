@@ -1,0 +1,24 @@
+<!-- enviar_correo.html -->
+
+{% extends "plantilla.html" %}
+{% block body %}
+<h2>Enviar Correo Electrónico</h2>
+
+<div class="contenedorFormulario">
+    {% if "valido" in request.GET %}
+
+    <p>Información enviada correctamente</p>
+
+    {% endif %}
+
+    <form action="" method="POST">
+        
+        {% csrf_token %}
+    <table style="margin: 20px left;">{{miFormulario.as_table}}</table>
+    
+    <input type="submit" value="Enviar" style="width: 150px;">
+
+    </form>
+
+</div>
+{% endblock %}

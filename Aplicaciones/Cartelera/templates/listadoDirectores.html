@@ -1,212 +1,50 @@
-{% extends "./plantilla.html" %}
-{% load static %}
-{% block body %}
-
-<div class="container">
-    <h1 class="text-center">Gestión de Directores con Peticiones Asíncronas</h1>
-    <div class="row">
-        <div class="col-md-12 text-end">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <i class="fas fa-plus"></i>
-                <b>Agregar Director</b>
-            </button>
-        </div>
-    </div>
-</div>
-
 <br>
-
-<table class="table table-bordered table-striped table-hover" id="tbl-directores">
-    <thead>
-        <tr>
-            <th class="text-center">ID</th>
-            <th class="text-center">Nombre</th>
-            <th class="text-center">Estado</th>
-            <th class="text-center">Gmail</th>
-            <th class="text-center">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for director in directores %}
-        <tr>
-            <td class="text-center">{{ director.id }}</td>
-            <td class="text-center">{{ director.nombre }}</td>
-            <td class="text-center">{{ director.estado|yesno:"Activo,Inactivo" }}</td>
-            <td class="text-center">{{ director.gmail }}</td>
-            <td class="text-center">
-                <a href="#" class="btn btn-outline-warning btn-circle" title="Editar Director" onclick="mostrarFormularioEditar({{ director.id }})">
-                    <i class="fas fa-pencil"></i>
-                </a>
-                <a href="#" onclick="return confirmarEliminarDirector({{ director.id }});" class="btn btn-outline-danger btn-circle" title="Eliminar Director">
-                    <i class="fas fa-trash"></i>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Nuevo Director</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{% url 'guardarDirector' %}" id="frm_nuevo_director" method="POST">
-                    {% csrf_token %}
-                    <label for="nombre"><b>Nombre:</b></label>
-                    <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del director" required>
-                    <br>
-                    <label for="email"><b>Email:</b></label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Ingrese el email del director" required>
-                    <br>
-                    <label for="estado"><b>Estado:</b></label>
-                    <select name="estado" class="form-control" id="estado">
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                    <br>
-                    <label for="gmail"><b>Gmail:</b></label>
-                    <input type="email" name="gmail" class="form-control" id="gmail" placeholder="Ingrese el Gmail del director" required>
-                    <br>
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i>&nbsp;Guardar
-                        </button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i>&nbsp;Cancelar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<div style="padding-left: 80px; padding-right: 80px;">
+    <table class="table table-bordered table-striped table-hover" id="tbl-directores">
+        <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">DNI</th>
+                <th class="text-center">APELLIDO</th>
+                <th class="text-center">NOMBRE</th>
+                <th class="text-center">FOTO</th>
+                <th class="text-center">ESTADO</th>
+                <th class="text-center">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for director in directores %}
+            <tr>
+                <td class="text-center">{{ director.id }}</td>
+                <td class="text-center">{{ director.dni }}</td>
+                <td class="text-center">{{ director.apellido }}</td>
+                <td class="text-center">{{ director.nombre }}</td>
+                <td class="text-center">
+                    {% if director.foto %}
+                    <img src="{{ director.foto.url }}" alt="Foto" width="50" height="50">
+                    {% else %}
+                    No disponible
+                    {% endif %}
+                </td>
+                <td class="text-center">{{ director.estado|yesno:"Activo,Inactivo" }}</td>
+                <td class="text-center">
+                    <a href="" class="btn btn-outline-warning btn-circle" title="Editar Director">
+                        <i class="fas fa-pencil"></i>
+                    </a>
+                    <a href="" onclick="return confirm('¿Estás seguro?');" class="btn btn-outline-danger btn-circle">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
 <script>
-    // Inicialización de DataTable
     var table = new DataTable('#tbl-directores');
-
-    // Función para mostrar el formulario de edición
-    function mostrarFormularioEditar(id) {
-        fetch(`/editarDirector/${id}/`)
-            .then(response => response.text())
-            .then(html => {
-                // Agregar el contenido HTML del formulario al modal
-                document.querySelector('#exampleModal .modal-content').innerHTML = html;
-                var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-                modal.show();
-            })
-            .catch(error => console.error('Error al cargar el formulario de edición:', error));
-    }
-
-    // Función para eliminar un director
-    function confirmarEliminarDirector(id) {
-        if (confirm('¿Estás seguro de eliminar este director?')) {
-            fetch(`/eliminarDirector/${id}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.estado) {
-                    Swal.fire({
-                        title: 'Confirmación',
-                        text: data.mensaje,
-                        icon: 'success'
-                    });
-                    table.destroy(); // Destruir la tabla actual
-                    // Recargar la tabla después de eliminar el director
-                    fetch('{% url "listadoDirectores" %}')
-                        .then(response => response.text())
-                        .then(html => {
-                            document.querySelector('tbody').innerHTML = html;
-                            table = new DataTable('#tbl-directores');
-                        })
-                        .catch(error => console.error('Error al cargar la lista de directores:', error));
-                } else {
-                    Swal.fire({
-                        title: 'ERROR',
-                        text: data.mensaje,
-                        icon: 'error'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error al eliminar el director:', error);
-                Swal.fire({
-                    title: 'ERROR',
-                    text: "Ocurrió un error al procesar la solicitud",
-                    icon: 'error'
-                });
-            });
-        }
-        return false;
-    }
-
-    // Manejo del formulario para agregar un nuevo director
-    document.querySelector("#frm_nuevo_director").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let formData = new FormData(this);
-        formData.append('estado', document.querySelector('#estado').value);
-
-        fetch("{% url 'guardarDirector' %}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.estado) {
-                Swal.fire({
-                    title: 'Confirmación',
-                    text: data.mensaje,
-                    icon: 'success'
-                });
-                // Cierra el modal y resetea el formulario
-                var modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
-                modal.hide();
-                this.reset();
-                table.destroy(); // Destruir la tabla actual
-                // Recargar la lista de directores
-                fetch('{% url "listadoDirectores" %}')
-                    .then(response => response.text())
-                    .then(html => {
-                        document.querySelector('tbody').innerHTML = html;
-                        table = new DataTable('#tbl-directores');
-                    })
-                    .catch(error => console.error('Error al cargar la lista de directores:', error));
-            } else {
-                Swal.fire({
-                    title: 'ERROR',
-                    text: data.mensaje,
-                    icon: 'error'
-                });
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            Swal.fire({
-                title: 'ERROR',
-                text: "Ocurrió un error al procesar la solicitud",
-                icon: 'error'
-            });
-        });
-    });
-
 </script>
-
 <style>
     .btn-circle {
         border-radius: 100px !important;
     }
 </style>
-
-{% endblock %}

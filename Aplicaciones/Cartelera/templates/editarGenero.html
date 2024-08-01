@@ -1,46 +1,36 @@
 {% extends "./plantilla.html" %}
 {% block body %}
-<h1>EDITAR GÉNERO</h1>
+<h1>EDITAR GENERO</h1>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form action="{% url 'procesoActualizarGeneros' generoEditar.id %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'procesarActualizacionGenero' %}" enctype="multipart/form-data" method="post"> 
                 {% csrf_token %}
-                <input type="hidden" name="id" value="{{ generoEditar.id }}">
-                
+                <input type="hidden" name="id" value="{{generoEditar.id}}">
                 <label for=""><b>Nombre:</b></label>
                 <input type="text" name="nombre" class="form-control"
-                    value="{{ generoEditar.nombre }}"
-                    id="nombre" placeholder="Ingrese el nombre del género" required>
-                
+                value="{{generoEditar.nombre}}"
+                id="nombre" placeholder="Ingrese el nombre del genero">
                 <label for=""><b>Descripción:</b></label>
                 <textarea name="descripcion" id="descripcion"
                     class="form-control" rows="3"
-                    placeholder="Ingrese la descripción"
-                    required>{{ generoEditar.descripcion }}</textarea>
-                
-                <label for="estado"><b>Estado:</b></label>
-                <select name="estado" id="estado" class="form-control" required>
-                    <option value="True" {% if generoEditar.estado %}selected{% endif %}>Activo</option>
-                    <option value="False" {% if not generoEditar.estado %}selected{% endif %}>Inactivo</option>
-                </select>
-                
+                    placeholder="Ingrese la descripcion"
+                >{{generoEditar.descripcion}}</textarea>
                 <br>
-
-                <label for=""><b>Fotografía actual:</b></label><br>
+                <label for="foto"><b>Fotografía:</b></label>
                 {% if generoEditar.foto %}
-                    <img src="{{ generoEditar.foto.url }}" alt="Fotografía del género" height="200px"><br><br>
-                {% else %}
-                    <p>No hay fotografía disponible</p>
+                    <div>
+                        <img src="{{ generoEditar.foto.url }}" alt="Foto actual" height="100px" width="100px">
+                        <a download href="{{ generoEditar.foto.url }}">Descargar</a>
+                    </div>
                 {% endif %}
-                
-                <label for=""><b>Seleccionar nueva fotografía:</b></label>
-                <input type="file" name="foto" class="form-control">
-                
-                <br><br>
-                <button type="submit" class="btn btn-warning">Actualizar</button>
+                <input type="file" name="foto" id="foto" accept="image/*" class="form-control">
+
+                <br>
+                <button  type="submit" class="btn btn-warning">
+                    Actualizar</button>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'listadoGeneros' %}" class="btn btn-secondary">Cancelar</a>
+                <a href="{% url 'listadoGeneros' %}">Cancelar</a>
             </form>
         </div>
     </div>

@@ -2,8 +2,9 @@
 {% load static %}
 {% block body %}
 
+<!-- Button trigger modal -->
 <div class="container">
-    <h1 class="text-center">Gestión de Directores con Peticiones Asíncronas</h1>
+    <h1 class="text-center">Gestión de Directores</h1>
     <div class="row"> 
         <div class="col-md-12 text-end">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -23,27 +24,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="#" id="frm_nuevo_director">
+                <form action="#" id="frm_nuevo_director" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label for="nombre"><b>Nombre:</b></label>
-                    <input type="text" name="nombre" class="form-control" id="nombre" placeholder="Ingrese el nombre del director">
+                    <label for=""><b>DNI:</b></label>
+                    <input type="text" name="dni" class="form-control" id="dni"
+                        placeholder="Ingrese el DNI del director">
                     <br>
-                    <label for="email"><b>Email:</b></label>
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Ingrese el email del director">
+                    <label for=""><b>Apellido:</b></label>
+                    <input type="text" name="apellido" class="form-control" id="apellido"
+                        placeholder="Ingrese el apellido del director">
                     <br>
-                    <label for="estado"><b>Estado:</b></label>
-                    <input type="checkbox" name="estado" class="form-control" id="estado">
+                    <label for=""><b>Nombre:</b></label>
+                    <input type="text" name="nombre" class="form-control" id="nombre"
+                        placeholder="Ingrese el nombre del director">
                     <br>
-                    <label for="gmail"><b>Gmail:</b></label>
-                    <input type="email" name="gmail" class="form-control" id="gmail" placeholder="Ingrese el Gmail del director">
+                    <label for=""><b>Foto:</b></label>
+                    <input type="file" name="foto" class="form-control" id="foto">
                     <br>
                     <div class="text-end">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i>&nbsp;Guardar
-                        </button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i>&nbsp;Cancelar
-                        </button>
+                        <button type="submit" class="btn btn-primary"><li class="fas fa-save"></li> &nbsp;Guardar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><li class="fas fa-times"></li>&nbsp; Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -51,53 +51,86 @@
     </div>
 </div>
 
-<br><br><br><br><br>
-
+<br><br>
+<div id="contenedor-directores"></div>
+<br><br><br>
 <script>
-    document.querySelector("#frm_nuevo_director").addEventListener("submit", function(event) {
-        event.preventDefault();
-        let formData = new FormData(this);
-        formData.append('estado', document.querySelector('#estado').checked);
-
-        fetch("{% url 'guardarDirector' %}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}'
+    $("#frm_nuevo_director").validate({
+        rules:{
+            dni:{
+                required:true,
+                minlength: 3,
+                maxlength: 15
+            },
+            apellido:{
+                required:true,
+                minlength: 3,
+                maxlength: 50
+            },
+            nombre:{
+                required:true,
+                minlength: 3,
+                maxlength: 50
             }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.estado === true) {
-                Swal.fire({
-                    title: 'Confirmación',
-                    text: data.mensaje,
-                    icon: 'success'
-                });
-                $("#exampleModal").modal('hide');
-                this.reset();
-                cargarDirectores(); // Recargar la lista de directores
-            } else {
-                Swal.fire({
-                    title: 'ERROR',
-                    text: data.mensaje,
-                    icon: 'error'
-                });
+        },
+        messages:{
+            dni:{
+                required:"Por favor ingrese el DNI",
+                minlength:"El DNI debe tener al menos 3 caracteres",
+                maxlength:"Máximo 15 caracteres"
+            },
+            apellido:{
+                required:"Por favor ingrese el apellido",
+                minlength:"El apellido debe tener al menos 3 caracteres",
+                maxlength:"Máximo 50 caracteres"
+            },
+            nombre:{
+                required:"Por favor ingrese el nombre",
+                minlength:"El nombre debe tener al menos 3 caracteres",
+                maxlength:"Máximo 50 caracteres"
             }
-        })
-        .catch(error => {
-            console.error(error);
-            Swal.fire({
-                title: 'ERROR',
-                text: "Ocurrió un error al procesar la solicitud",
-                icon: 'error'
+        },
+        submitHandler:function(formulario){
+            $.ajax({
+                url: "{% url 'guardarDirector' %}",
+                type: 'post',
+                data: new FormData(formulario),
+                processData: false,
+                contentType: false,
+                success: function(data){
+                    if(data.estado === true){
+                        Swal.fire({
+                            title:'Confirmación',
+                            text: data.mensaje,
+                            icon: 'success'
+                        });
+                        $("#exampleModal").modal('hide');
+                        $(formulario)[0].reset();
+                        cargarDirectores();
+                    }else{
+                        Swal.fire({
+                            title:'ERROR',
+                            text: data.mensaje,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                    Swal.fire({
+                        title:'ERROR',
+                        text: "Ocurrió un error al procesar la solicitud",
+                        icon: 'error'
+                    });
+                }
             });
-        });
+        }
     });
 
-    function cargarDirectores() {
+    function cargarDirectores(){
         $("#contenedor-directores").load('{% url "listadoDirectores" %}');
     }
+    cargarDirectores();
 </script>
 
 {% endblock %}

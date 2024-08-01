@@ -15,7 +15,6 @@
                 <td>ID</td>
                 <td>NOMBRE</td>
                 <td>DESCRIPCIÓN</td>
-                <td>ESTADO</td>
                 <td>FOTO</td>
                 <td>ACCIONES</td>
             </tr>
@@ -23,23 +22,16 @@
         <tbody>
             {% for generoTemporal in generos %}
             <tr>
-                <td>{{ generoTemporal.id }}</td>
-                <td>{{ generoTemporal.nombre }}</td>
-                <td>{{ generoTemporal.descripcion }}</td>
-                <td>
-                    {% if generoTemporal.estado %}
-                    <span class="badge bg-success">Activo</span>
-                    {% else %}
-                    <span class="badge bg-danger">Inactivo</span>
-                    {% endif %}
-                </td>
+                <td>{{generoTemporal.id}}</td>
+                <td>{{generoTemporal.nombre}}</td>
+                <td>{{generoTemporal.descripcion}}</td>
                 <td>
                     {% if generoTemporal.foto %}
-                    <a href="{{ generoTemporal.foto.url }}" target="_blank">
-                        <img src="{{ generoTemporal.foto.url }}" alt=""
-                        height="100px" width="100px">
+                    <a href="{{generoTemporal.foto.url}}" target="_blank">
+                    <img src="{{generoTemporal.foto.url}}" alt=""
+                    height="100px" width="100px">
                     </a><br>
-                    <a download href="{{ generoTemporal.foto.url }}">
+                    <a download href="{{generoTemporal.foto.url}}">
                         Descargar
                     </a>
                     {% else %}
@@ -48,7 +40,7 @@
                 </td>
                 <td>
                     <a href="{% url 'editarGenero' generoTemporal.id %}" class="btn btn-warning">Editar</a>
-                    <a href="{% url 'eliminarGeneros' generoTemporal.id %}" onclick="return confirm('¿Estás seguro?');" class="btn btn-danger">Eliminar</a>
+                    <a href="{% url 'eliminarGenero' generoTemporal.id %}" onclick="return confirm('Estas seguro?');" class="btn btn-danger">Eliminar</a>
                 </td>
             </tr>
             {% endfor %}
@@ -60,14 +52,15 @@
     </script>
 
     <style>
-        .dt-input {
-            border: 3px solid red !important;
-            border-radius: 20px !important;
+        .dt-input{
+            border:3px solid red !important;
+            border-radius: 20px !important ;
         }
-        .dt-search label {
+        .dt-search label{
             color: green !important;
         }
     </style>
 
 </div>
 {% endblock %}
+

@@ -21,5 +21,5 @@ services:
       - key: ALLOWED_HOSTS
         value: cineutc-b1lz.onrender.com
 
+# set DATABASE_URL=postgresql://adrian:cVYvhiUAWI3zHfUOSnoXu8gGwt3GX8jg@dpg-cqlpl8d6l47c73fj7vtg-a.oregon-postgres.render.com/dbcine_4m9u
 
-# set DATABASE_URL=postgresql://david:RkBAp8ZZaE98t5OiwtpfNnJmI0URw2K9@dpg-cqjettqj1k6c739rc1e0-a.oregon-postgres.render.com/dbcine

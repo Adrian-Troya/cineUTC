@@ -1,132 +1,41 @@
-{% extends "./plantilla.html" %}
-{% block body %}
 <br>
-
-<div class="container">
-    <h1>Gestión de Cines con Peticiones Asíncronas</h1>    
-    <div class="row">
-        <div class="col-md-12 text-end">
-            <!-- Botón para redirigir a la vista gestionCines -->
-            <a href="{% url 'gestionCines' %}" class="btn btn-primary">
-                <i class="fas fa-plus"></i>
-                <b>Agregar Cine</b>
-            </a>
-        </div>
-    </div>
+<div style="padding-left: 80px; padding-right: 80px;">
+    <table class="table table-bordered table-striped table-hover" id="tbl-cines">
+        <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">NOMBRE</th>
+                <th class="text-center">DIRECCION </th>
+                <th class="text-center">TELEFONO</th>
+                <th class="text-center">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cineTemporal in cines %}
+            <tr>
+                <td class="text-center">{{ cineTemporal.id }}</td>
+                <td class="text-center">{{ cineTemporal.nombre }}</td>
+                <td class="text-center">{{ cineTemporal.direccion }}</td>
+                <td class="text-center">{{ cineTemporal.telefono }}</td>
+                <td class="text-center">
+                    <a href="" class="btn btn-outline-warning btn-circle" title="Editar Cine">
+                        <i class="fas fa-pencil"></i>
+                    </a>
+                    <a href="" onclick="return confirm('¿Estás seguro?');" class="btn btn-outline-danger btn-circle">
+                        <i class="fas fa-trash"> </i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
 </div>
-
-<br>
-
-<table class="table table-bordered table-striped table-hover" id="tbl-cines">
-    <thead>
-        <tr>
-            <th class="text-center">ID</th>
-            <th class="text-center">NOMBRE</th>
-            <th class="text-center">DIRECCION </th>
-            <th class="text-center">TELEFONO</th>
-            <th class="text-center">ACCIONES</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cineTemporal in cines %}
-        <tr>
-            <td class="text-center">{{ cineTemporal.id }}</td>
-            <td class="text-center">{{ cineTemporal.nombre }}</td>
-            <td class="text-center">{{ cineTemporal.direccion }}</td>
-            <td class="text-center">{{ cineTemporal.telefono }}</td>
-            <td class="text-center">
-                <a href="" class="btn btn-outline-warning btn-circle" title="Editar Cine">
-                    <i class="fas fa-pencil"></i>
-                </a>
-                <a href="" onclick="return confirm('¿Estás seguro?');" class="btn btn-outline-danger btn-circle">
-                    <i class="fas fa-trash"> </i>
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
 <script>
     var table = new DataTable('#tbl-cines');
-    
-    $("#frm_nuevo_cine").validate({
-        rules: {
-            nombre: {
-                required: true,
-                minlength: 3,
-                maxlength: 10
-            },
-            direccion: {
-                required: true,
-                minlength: 3,
-                maxlength: 15
-            },
-            telefono: {
-                required: true,
-                minlength: 10,
-                maxlength: 10
-            }
-        },
-        messages: {
-            nombre: {
-                required: "Por favor ingrese el nombre",
-                minlength: "El nombre debe tener al menos 3 letras mínimo",
-                maxlength: "Máximo 10 caracteres"
-            },
-            direccion: {
-                required: "Por favor ingrese la dirección",
-                minlength: "La dirección debe tener al menos 3 letras mínimo",
-                maxlength: "Máximo 15 caracteres"
-            },
-            telefono: {
-                required: "Por favor ingrese el teléfono",
-                minlength: "El teléfono debe tener al menos 10 dígitos mínimo",
-                maxlength: "Máximo 10 dígitos"
-            }
-        },
-        submitHandler: function(formulario) {
-            $.ajax({
-                url: "{% url 'guardarCine' %}",
-                type: 'post',
-                data: $(formulario).serialize(),
-                success: function(data) {
-                    if (data.estado === true) {
-                        Swal.fire({
-                            title: 'Confirmación',
-                            text: data.mensaje,
-                            icon: 'success'
-                        });
-                        $("#exampleModal").modal('hide');
-                        $(formulario)[0].reset();
-                        cargarCines(); // Recargar la lista de cines
-                    } else {
-                        Swal.fire({
-                            title: 'ERROR',
-                            text: data.mensaje,
-                            icon: 'error'
-                        });
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                    Swal.fire({
-                        title: 'ERROR',
-                        text: "Ocurrió un error al procesar la solicitud",
-                        icon: 'error'
-                    });
-                }
-            });
-        }
-    });
-
-    function cargarCines() {
-        $("#contenedor-cines").load('{% url "listadoCines" %}');
-    }
 </script>
 <style>
     .btn-circle {
         border-radius: 100px !important;
     }
 </style>
-{% endblock %}

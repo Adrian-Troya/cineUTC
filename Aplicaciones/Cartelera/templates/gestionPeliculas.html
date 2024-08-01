@@ -1,122 +1,19 @@
 {% extends "./plantilla.html" %}
+{% load static %}
 {% block body %}
-<br>
 
+<!-- Button trigger modal -->
 <div class="container">
-    <h1>Gestión de Películas con Peticiones Asíncronas</h1>
-    <div class="row">
+    <h1 class="text-center">Gestión de Películas</h1>
+    <div class="row"> 
         <div class="col-md-12 text-end">
-            <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 <i class="fas fa-plus"></i>
                 <b>Agregar Película</b>
-            </a>
+            </button>
         </div>
     </div>
 </div>
-
-<br>
-
-<table class="table table-bordered table-striped table-hover" id="tbl-peliculas">
-    <thead>
-        <tr>
-            <th class="text-center">ID</th>
-            <th class="text-center">Título</th>
-            <th class="text-center">Duración</th>
-            <th class="text-center">Sinopsis</th>
-            <th class="text-center">Género</th>
-            <th class="text-center">Director</th>
-            <th class="text-center">Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for pelicula in peliculas %}
-        <tr>
-            <td class="text-center">{{ pelicula.id }}</td>
-            <td class="text-center">{{ pelicula.titulo }}</td>
-            <td class="text-center">{{ pelicula.duracion }}</td>
-            <td class="text-center">{{ pelicula.sinopsis }}</td>
-            <td class="text-center">{{ pelicula.genero.nombre }}</td>
-            <td class="text-center">{{ pelicula.director.nombre }}</td>
-            <td class="text-center">
-                <button class="btn btn-outline-warning btn-circle" title="Editar Película" onclick="mostrarFormularioEditar({{ pelicula.id }})">
-                    <i class="fas fa-pencil"></i>
-                </button>
-                <button class="btn btn-outline-danger btn-circle" title="Eliminar Película" onclick="eliminarPelicula({{ pelicula.id }})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<script>
-    var table = new DataTable('#tbl-peliculas');
-
-    // Función para mostrar el formulario de edición
-    function mostrarFormularioEditar(id) {
-        fetch(`/editarPelicula/${id}/`)
-            .then(response => response.text())
-            .then(html => {
-                document.querySelector('#exampleModal .modal-content').innerHTML = html;
-                var modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-                modal.show();
-            })
-            .catch(error => console.error('Error al cargar el formulario de edición:', error));
-    }
-
-    // Función para eliminar una película
-    function eliminarPelicula(id) {
-        if (confirm('¿Estás seguro de eliminar esta película?')) {
-            fetch(`/eliminarPelicula/${id}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.estado) {
-                    alert(data.mensaje);
-                    location.reload();
-                } else {
-                    alert(data.mensaje);
-                }
-            })
-            .catch(error => console.error('Error al eliminar la película:', error));
-        }
-    }
-
-    // Función para guardar una nueva película
-    document.querySelector('#frm_nueva_pelicula').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-
-        fetch('{% url "guardarPelicula" %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': formData.get('csrfmiddlewaretoken')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.estado) {
-                alert(data.mensaje);
-                location.reload();
-            } else {
-                alert(data.mensaje);
-            }
-        })
-        .catch(error => console.error('Error al guardar la película:', error));
-    });
-</script>
-
-<style>
-    .btn-circle {
-        border-radius: 100px !important;
-    }
-</style>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -127,45 +24,133 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'guardarPelicula' %}" method="POST" id="frm_nueva_pelicula">
+                <form action="#" id="frm_nueva_pelicula" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label for="titulo"><b>Título:</b></label>
-                    <input type="text" name="titulo" class="form-control" id="titulo" placeholder="Ingrese el título de la película" required>
+                    <label for=""><b>Título:</b></label>
+                    <input type="text" name="titulo" class="form-control" id="titulo"
+                        placeholder="Ingrese el título de la película">
                     <br>
-                    <label for="duracion"><b>Duración:</b></label>
-                    <input type="text" name="duracion" class="form-control" id="duracion" placeholder="Ingrese la duración de la película" required>
+                    <label for=""><b>Duración:</b></label>
+                    <input type="time" name="duracion" class="form-control" id="duracion"
+                        placeholder="Ingrese la duración de la película">
                     <br>
-                    <label for="sinopsis"><b>Sinopsis:</b></label>
-                    <textarea name="sinopsis" class="form-control" id="sinopsis" placeholder="Ingrese la sinopsis de la película" required></textarea>
+                    <label for=""><b>Sinopsis:</b></label>
+                    <textarea name="sinopsis" class="form-control" id="sinopsis"
+                        placeholder="Ingrese la sinopsis de la película"></textarea>
                     <br>
-                    <label for="genero"><b>Género:</b></label>
-                    <select name="genero" class="form-control" id="genero" required>
-                        <option value="">Seleccione un género</option>
+                    <label for=""><b>Género:</b></label>
+                    <select name="genero" class="form-control" id="genero">
                         {% for genero in generos %}
-                            <option value="{{ genero.id }}">{{ genero.nombre }}</option>
+                        <option value="{{ genero.id }}">{{ genero.nombre }}</option>
                         {% endfor %}
                     </select>
                     <br>
-                    <label for="director"><b>Director:</b></label>
-                    <select name="director" class="form-control" id="director" required>
-                        <option value="">Seleccione un director</option>
+                    <label for=""><b>Director:</b></label>
+                    <select name="director" class="form-control" id="director">
                         {% for director in directores %}
-                            <option value="{{ director.id }}">{{ director.nombre }}</option>
+                        <option value="{{ director.id }}">{{ director.nombre }} {{ director.apellido }}</option>
                         {% endfor %}
                     </select>
+                    <br>
+                    <label for=""><b>Portada:</b></label>
+                    <input type="file" name="portada" class="form-control" id="portada">
                     <br>
                     <div class="text-end">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i>&nbsp;Guardar
-                        </button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
-                            <i class="fas fa-times"></i>&nbsp;Cancelar
-                        </button>
+                        <button type="submit" class="btn btn-primary"><li class="fas fa-save"></li> &nbsp;Guardar</button>
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><li class="fas fa-times"></li>&nbsp; Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+<br><br>
+<div id="contenedor-peliculas"></div>
+<br><br><br>
+<script>
+    $("#frm_nueva_pelicula").validate({
+        rules:{
+            titulo:{
+                required:true,
+                minlength: 3,
+                maxlength: 250
+            },
+            duracion:{
+                required:true
+            },
+            sinopsis:{
+                required:true,
+                minlength: 3
+            },
+            genero:{
+                required:true
+            },
+            director:{
+                required:true
+            }
+        },
+        messages:{
+            titulo:{
+                required:"Por favor ingrese el título",
+                minlength:"El título debe tener al menos 3 caracteres",
+                maxlength:"Máximo 250 caracteres"
+            },
+            duracion:{
+                required:"Por favor ingrese la duración"
+            },
+            sinopsis:{
+                required:"Por favor ingrese la sinopsis",
+                minlength:"La sinopsis debe tener al menos 3 caracteres"
+            },
+            genero:{
+                required:"Por favor seleccione un género"
+            },
+            director:{
+                required:"Por favor seleccione un director"
+            }
+        },
+        submitHandler:function(formulario){
+            $.ajax({
+                url: "{% url 'guardarPelicula' %}",
+                type: 'post',
+                data: new FormData(formulario),
+                processData: false,
+                contentType: false,
+                success: function(data){
+                    if(data.estado === true){
+                        Swal.fire({
+                            title:'Confirmación',
+                            text: data.mensaje,
+                            icon: 'success'
+                        });
+                        $("#exampleModal").modal('hide');
+                        $(formulario)[0].reset();
+                        cargarPeliculas();
+                    }else{
+                        Swal.fire({
+                            title:'ERROR',
+                            text: data.mensaje,
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function(error){
+                    console.log(error);
+                    Swal.fire({
+                        title:'ERROR',
+                        text: "Ocurrió un error al procesar la solicitud",
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    });
+
+    function cargarPeliculas(){
+        $("#contenedor-peliculas").load('{% url "listadoPeliculas" %}');
+    }
+    cargarPeliculas();
+</script>
 
 {% endblock %}
