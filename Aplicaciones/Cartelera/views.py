@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Genero, Pelicula, Director, Pais, Cine
 from django.contrib import messages
+#IMPORTACIONES PARA CORREO ELECTRONICO
+from django.core.mail import EmailMessage
+from .forms import FormularioContacto
 from django.http import HttpResponse, JsonResponse
 
 #importaciones prueba para cine
@@ -235,3 +238,28 @@ def guardarCine(request):
         })
 #--------------------------------------CORREO ELECTRONICO---------------
 
+def correo(request):
+
+    formulario_contacto=FormularioContacto()
+
+    if request.method == "POST":
+        formulario_contacto=FormularioContacto(data=request.POST)
+        if formulario_contacto.is_valid():
+            nombre = request.POST.get('nombre')
+            email = request.POST.get('email')
+            contenido = request.POST.get('contenido')
+
+            email=EmailMessage("Mensaje de app Django",
+            "El usuario con nombre {} con la dirección {} escribe lo siguiente:\n\n {}".format(nombre, email, contenido),
+            '',
+            ["javierguala07@gmail.com"],
+            reply_to=[email])
+            
+            try:
+                email.send()
+
+                return redirect("/correo/?valido")
+            except:
+                return redirect("/correo/?novalido")
+           
+    return render(request, "correo.html", {'miFormulario':formulario_contacto})
